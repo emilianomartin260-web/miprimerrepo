@@ -1,0 +1,13 @@
+# Este repositorio tiene como raíz la carpeta de perfil de Windows
+# (C:\Users\Elbio Javier), no un proyecto individual. Sin esta lista de
+# permitidos, un "git add -A" subiría Escritorio, Documentos personales,
+# AppData, archivos de registro de Windows, etc.
+#
+# Regla: todo ignorado por defecto, salvo la carpeta del proyecto de trabajo.
+/*
+!/Documents
+/Documents/*
+!/Documents/Claude
+/Documents/Claude/*
+!/Documents/Claude/primer code prueba
+!/.gitignore
