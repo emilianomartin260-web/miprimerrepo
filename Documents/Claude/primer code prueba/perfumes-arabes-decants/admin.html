@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="elegante">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel de costos y ganancia — Oasis Decants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* Estilos propios del panel admin: no afectan a la tienda pública. */
+  :root { --ok: #2f9e5c; --bad: #c0392b; }
+  [data-theme="oscuro"] { --ok: #4fd889; --bad: #ff6b5e; }
+
+  .admin-wrap { padding: 32px 0 64px; }
+  .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;}
+  .admin-header h1 { font-family: var(--font-heading); font-size: 1.6rem; margin: 0; }
+  .back-link { color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+  .back-link:hover { text-decoration: underline; }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+  .panel h2 { font-family: var(--font-heading); margin-top: 0; font-size: 1.15rem; }
+  .panel .hint { color: var(--text-muted); font-size: 0.85rem; margin-top: -6px; margin-bottom: 18px; }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+  }
+  .field label { display: block; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px; }
+  .field input {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+  }
+
+  .calc-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--border);
+  }
+  .stat { text-align: center; }
+  .stat .label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .stat .value { font-size: 1.3rem; font-weight: 700; font-family: var(--font-heading); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-muted); }
+  td input {
+    width: 90px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+  }
+  .muted { color: var(--text-muted); font-size: 0.8rem; }
+  .table-scroll { overflow-x: auto; }
+  .product-cell { display: flex; align-items: center; gap: 10px; min-width: 200px; }
+  .thumb { width: 34px; height: 42px; flex: none; background: radial-gradient(circle at 30% 20%, var(--surface) 0%, var(--bg) 70%); border-radius: 6px; }
+
+  .actions { display: flex; gap: 10px; margin-top: 16px; align-items: center; flex-wrap: wrap; }
+  #save-status { color: var(--ok); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="container header-inner">
+    <div class="brand">Oasis <span>Decants</span> · Admin</div>
+    <a class="back-link" href="index.html">← Ver tienda</a>
+  </div>
+</header>
+
+<div class="container admin-wrap">
+  <div class="admin-header">
+    <h1>Costos, precios y ganancia</h1>
+  </div>
+
+  <section class="panel" id="calculadora">
+    <h2>Calculadora rápida</h2>
+    <p class="hint">Simulá cualquier escenario sin tocar el catálogo. Útil antes de cargar un producto nuevo.</p>
+    <div class="calc-grid">
+      <div class="field">
+        <label>Costo del frasco completo (ARS)</label>
+        <input type="number" id="calc-bottleCost" value="28000" />
+      </div>
+      <div class="field">
+        <label>Tamaño del frasco (ml)</label>
+        <input type="number" id="calc-bottleSizeMl" value="100" />
+      </div>
+      <div class="field">
+        <label>Tamaño del decant (ml)</label>
+        <input type="number" id="calc-decantMl" value="5" />
+      </div>
+      <div class="field">
+        <label>Envase + insumos (ARS)</label>
+        <input type="number" id="calc-packagingCost" value="350" />
+      </div>
+      <div class="field">
+        <label>Precio de venta (ARS)</label>
+        <input type="number" id="calc-price" value="3800" />
+      </div>
+      <div class="field">
+        <label>Margen objetivo (%)</label>
+        <input type="number" id="calc-targetMargin" value="55" />
+      </div>
+    </div>
+
+    <div class="calc-results">
+      <div class="stat">
+        <div class="label">Costo por decant</div>
+        <div class="value" id="calc-out-costo">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Ganancia</div>
+        <div class="value" id="calc-out-profit">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Margen</div>
+        <div class="value" id="calc-out-margin">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Markup</div>
+        <div class="value" id="calc-out-markup">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Precio p/ margen objetivo</div>
+        <div class="value" id="calc-out-sugerido">—</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Catálogo — costo y ganancia por producto</h2>
+    <p class="hint">Editá cualquier celda: el costo y la ganancia se recalculan solos. "Guardar" aplica los cambios a la tienda pública.</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Costo frasco</th>
+            <th>Frasco (ml)</th>
+            <th>Decant (ml)</th>
+            <th>Envase</th>
+            <th>Precio venta</th>
+            <th>Costo/decant</th>
+            <th>Ganancia</th>
+            <th>Margen</th>
+          </tr>
+        </thead>
+        <tbody id="products-body"></tbody>
+      </table>
+    </div>
+    <div class="actions">
+      <button class="btn" id="save-btn">Guardar cambios</button>
+      <button class="btn secondary" id="reset-btn">Restaurar valores de fábrica</button>
+      <span id="save-status"></span>
+    </div>
+  </section>
+</div>
+
+<script src="data.js"></script>
+<script src="calc.js"></script>
+<script src="illustrations.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
