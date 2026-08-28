@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="elegante">
+<head>
+<meta charset="UTF-8" />
+<!-- Sin esta línea el sitio no es responsive en celular (error clásico, ver README) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Oasis Decants — Perfumes árabes de nicho, fraccionados</title>
+<meta name="description" content="Tienda demo de decants de perfumes árabes: catálogo, carrito y panel de administración de costos y ganancia." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site">
+  <div class="container header-inner">
+    <div class="brand">Oasis <span>Decants</span></div>
+    <div class="header-actions">
+      <button class="icon-btn" id="cart-toggle">
+        🛍️ Carrito <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-art" id="hero-art"></div>
+    <h1>Perfumes árabes de nicho, en decants</h1>
+    <p>Fraccionamos frascos originales en decants de 5ml para que puedas probar fragancias de lujo sin pagar el frasco completo.</p>
+  </div>
+</section>
+
+<main class="container">
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="Buscar por marca o nombre..." />
+    <select id="family-filter"></select>
+    <div class="layout-toggle">
+      <button data-layout-btn="grid">▦ Grilla</button>
+      <button data-layout-btn="list">☰ Lista</button>
+    </div>
+  </div>
+
+  <div class="catalog" id="catalog"></div>
+</main>
+
+<footer class="site">
+  <div class="container">
+    Tienda demo con fines educativos — Oasis Decants no es una marca real. · Precios y stock ilustrativos.
+  </div>
+</footer>
+
+<!-- Panel flotante: acá se demuestran las "distintas modificaciones" en vivo -->
+<div class="demo-panel">
+  <h4>⚙️ Panel demo</h4>
+  <div class="row">
+    <label>Tema visual</label>
+    <div class="options">
+      <button data-theme-btn="basico">Básico</button>
+      <button data-theme-btn="elegante">Elegante</button>
+      <button data-theme-btn="oscuro">Oscuro</button>
+    </div>
+  </div>
+  <div class="row">
+    <label>Moneda</label>
+    <div class="options">
+      <button data-currency-btn="ARS">ARS</button>
+      <button data-currency-btn="USD">USD</button>
+    </div>
+  </div>
+  <a class="admin-link" href="admin.html">→ Panel de costos y ganancia</a>
+</div>
+
+<!-- Carrito lateral -->
+<div class="overlay" id="overlay"></div>
+<aside class="cart-drawer" id="cart-drawer">
+  <h3>Tu carrito</h3>
+  <button class="icon-btn" id="cart-close" style="align-self:flex-end;">Cerrar ✕</button>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-total" id="cart-total"></div>
+  <button class="btn" id="wa-checkout">Consultar por WhatsApp</button>
+</aside>
+
+<script src="data.js"></script>
+<script src="illustrations.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
